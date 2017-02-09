@@ -27,5 +27,11 @@ Default Values can be found in code
 *	maxWidth --- the max Width of one drop
 *	dropSpeed --- the drop speed (bigger drops fall a bit faster, than smaller ones)
 *	blueStartColor --- rain drops get an random blue value (0-255), this is the min value
-*	blueEndColor ---	and the max value
+*	blueEndColor ---	and the max value (cant be more than 256)
   
+## More Ideas
+* Firework
+* text written with symbols like 0 and 1
+* Windows screen saver (Mystify, Ribbons)
+* Starfield (extended with planets or rocks maybe)
+* animation that writes an text letter by letter
