@@ -1,7 +1,7 @@
 var stage;
 var circle;
 var arr = [];
-var ja;
+
 init();
 
 function init() {
@@ -10,7 +10,6 @@ function init() {
         arr.length; i++) {
         stage.addChild(arr[i]);
     }
-    ja = 0;
     createjs.Ticker.addEventListener("tick", tick);
     createjs.Ticker.setFPS(30);
 }
@@ -28,9 +27,6 @@ function tick() {
     stage.update();
 }
 var r, g, b;
-r = 0;
-g = 0;
-b = 0;
 
 function newCircle(yy, spee, siz) {
     var cir = new createjs.Shape();
