@@ -40,46 +40,8 @@ function init() {
 }
 
 //ticker, which controls the drawing
-var kk = 0;
-var oo = 0;
-
 function tick() {
-    if (kk < sortedPixels.length) {
-        if (oo < blackRects[kk].length) {
-            if (blackRects[kk][oo] == true) {
-                var text2 = new createjs.Text();
-                text2.set({
-                    text: innerText,
-                    textAlign: 'center',
-                    textBaseline: 'middle'
-                });
-                text2.x = kk * rectSize;
-                text2.y = oo * rectSize;
-                text2.snapToPixel = true;
-                var bb = text2.getBounds();
-                text2.cache(bb.x, bb.y, bb.width, bb.height);
-                stage.addChild(text2);
-            } else {
-                var text2 = new createjs.Text();
-                text2.set({
-                    text: outerText,
-                    textAlign: 'center',
-                    textBaseline: 'middle'
-                });
-                text2.x = kk * rectSize;
-                text2.y = oo * rectSize;
-                text2.snapToPixel = true;
-                var bb = text2.getBounds()
-                text2.cache(bb.x, bb.y, bb.width, bb.height);
-                stage.addChild(text2);
-            }
-            stage.update();
-            oo++;
-        } else {
-            kk++;
-            oo = 0;
-        }
-    }
+
 }
 
 function clicked() {
@@ -149,6 +111,52 @@ function clicked() {
             }
         }
     }
-    createjs.Ticker.addEventListener("tick", tick);
-    createjs.Ticker.setFPS(fps);
+    //createjs.Ticker.addEventListener("tick", tick);
+    //createjs.Ticker.setFPS(fps);
+    draw();
+}
+
+function draw() {
+    for (k = 0; k < blackRects.length; k++) {
+        for (o = 0; o < blackRects[k].length; o++) {
+            if (blackRects[k][o] == true) {
+                var text2 = new createjs.Text();
+                text2.set({
+                    text: innerText,
+                    textAlign: 'center',
+                    textBaseline: 'middle'
+                });
+                text2.x = k * rectSize;
+                text2.y = o * rectSize;
+                //text2.snapToPixel = true;
+                var bb = text2.getBounds();
+                //text2.cache(bb.x, bb.y, bb.width, bb.height);
+                stage.addChild(text2);
+            } else {
+                var text2 = new createjs.Text();
+                text2.set({
+                    text: outerText,
+                    textAlign: 'center',
+                    textBaseline: 'middle'
+                });
+                text2.x = k * rectSize;
+                text2.y = o * rectSize;
+                //text2.snapToPixel = true;
+                var bb = text2.getBounds();
+                //text2.cache(bb.x, bb.y, bb.width, bb.height);
+                stage.addChild(text2);
+            }
+            //stage.update();
+        }
+    }
+    stage.update();
+}
+
+function exportJPEG() {
+    //generate the url using toDataURL
+    canvas = document.getElementById("demoCanvas");
+    var img = canvas.toDataURL("image/png;base64;");
+    //img = img.replace("image/png","image/octet-stream"); // force download, user would have to give the file name.
+    // you can also use anchor tag with download attribute to force download the canvas with file name.
+    window.open(img, "", "width=500,height=500");
 }
