@@ -29,8 +29,8 @@ function init() {
         x: Math.floor(stage.canvas.width / rectSize)
         , y: Math.floor(stage.canvas.height / rectSize)
     };
-    innerText = "@";
-    outerText = ".";
+    $("#innerText").val("1");
+    $("#outterText").val("0");
     /*
      * SETTINGS END
      */
@@ -39,56 +39,19 @@ function init() {
     pixelMatrix = createEmpty3DArray(rectResolution.x, rectResolution.y);
     blackRects = createFilled2DArray(rectResolution.x, rectResolution.y);
     // register events
-    $("#btnStart").click(startVisualisation);
+    $("#start").click(startVisualisation);
+    $("#export").click(exportJPEG);
 }
 //ticker, which controls the drawing
-var kk = 0;
-var oo = 0;
-
 function tick() {
-    if (kk < rawPixelData.length) {
-        if (oo < blackRects[kk].length) {
-            if (blackRects[kk][oo] == true) {
-                var text2 = new createjs.Text();
-                text2.set({
-                    text: innerText
-                    , textAlign: 'center'
-                    , textBaseline: 'middle'
-                });
-                text2.x = kk * rectSize;
-                text2.y = oo * rectSize;
-                text2.snapToPixel = true;
-                var bb = text2.getBounds();
-                text2.cache(bb.x, bb.y, bb.width, bb.height);
-                stage.addChild(text2);
-            }
-            else {
-                var text2 = new createjs.Text();
-                text2.set({
-                    text: outerText
-                    , textAlign: 'center'
-                    , textBaseline: 'middle'
-                });
-                text2.x = kk * rectSize;
-                text2.y = oo * rectSize;
-                text2.snapToPixel = true;
-                var bb = text2.getBounds()
-                text2.cache(bb.x, bb.y, bb.width, bb.height);
-                stage.addChild(text2);
-            }
-            stage.update();
-            oo++;
-        }
-        else {
-            kk++;
-            oo = 0;
-        }
-    }
+    if (createjs.Ticker.paused) return;
+    draw();
 }
 
 function startVisualisation() {
+    createjs.Ticker.paused = false;
     stage.removeAllChildren();
-    showText($("#textToShow").val(), 20);
+    showText($("#textToShow").val(), stage.canvas.width / 2, stage.canvas.height / 2, 20);
     rawPixelData = getPixels(stage);
     stage.removeChild(text);
     for (i = 0; i < rawPixelData.length; i++) {
@@ -115,7 +78,7 @@ function getPixels(stage) {
     return arr;
 }
 
-function showText(msg, scale) {
+function showText(msg, x, y, scale) {
     text = new createjs.Text();
     text.set({
         text: msg
@@ -127,8 +90,8 @@ function showText(msg, scale) {
     text.scaleY = scale;
     //move text to mid of canvas
     b = text.getBounds();
-    text.x = stage.canvas.width / 2 - b.width / 2;
-    text.y = stage.canvas.height / 2 - b.height / 2;
+    text.x = x;
+    text.y = y;
     stage.addChild(text);
     stage.update(); //update stage to show text
 }
@@ -172,4 +135,30 @@ function calcFilledAreas(rawData, array3D, res) {
         }
     }
     return matrixWithBlackAreas;
+}
+
+function draw() {
+    innerText = $("#innerText").val();
+    outterText = $("#outterText").val();
+    for (k = 0; k < blackRects.length; k++) {
+        for (o = 0; o < blackRects[k].length; o++) {
+            if (blackRects[k][o] == true) {
+                showText(innerText, k * rectSize, o * rectSize, 1);
+            }
+            else {
+                showText(outerText, k * rectSize, o * rectSize, 1);
+            }
+        }
+    }
+    stage.update();
+    createjs.Ticker.paused = true;
+}
+
+function exportJPEG() {
+    //generate the url using toDataURL
+    canvas = document.getElementById("demoCanvas");
+    var img = canvas.toDataURL("image/png;base64;");
+    //img = img.replace("image/png","image/octet-stream"); // force download, user would have to give the file name.
+    // you can also use anchor tag with download attribute to force download the canvas with file name.
+    window.open(img, "", "width=500,height=500");
 }
