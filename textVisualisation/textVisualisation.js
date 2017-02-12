@@ -45,14 +45,14 @@ function init() {
 //ticker, which controls the drawing
 function tick() {
     if (createjs.Ticker.paused) return;
-    draw();
+    //    draw();
 }
 
 function startVisualisation() {
     createjs.Ticker.paused = false;
     stage.removeAllChildren();
-    showText($("#textToShow").val(), stage.canvas.width / 2, stage.canvas.height / 2, 20);
-    rawPixelData = getPixels(stage);
+    showText($("#textToShow").val(), stage.canvas.width / 2, stage.canvas.height / 2, 20, true);
+    rawPixelData = getPixels();
     stage.removeChild(text);
     for (i = 0; i < rawPixelData.length; i++) {
         var x = Math.floor((i / rectSize) % rectResolution.x);
@@ -62,9 +62,10 @@ function startVisualisation() {
     blackRects = calcFilledAreas(rawPixelData, pixelMatrix, resolution);
     createjs.Ticker.addEventListener("tick", tick);
     createjs.Ticker.setFPS(fps);
+    draw();
 }
 
-function getPixels(stage) {
+function getPixels() {
     var imageData = stage.canvas.getContext('2d').getImageData(0, 0, stage.canvas.width, stage.canvas.height).data;
     var arr = []
     for (i = 0; i < imageData.length; i = i + 4) {
@@ -78,7 +79,7 @@ function getPixels(stage) {
     return arr;
 }
 
-function showText(msg, x, y, scale) {
+function showText(msg, x, y, scale, update) {
     text = new createjs.Text();
     text.set({
         text: msg,
@@ -93,7 +94,8 @@ function showText(msg, x, y, scale) {
     text.x = x;
     text.y = y;
     stage.addChild(text);
-    stage.update(); //update stage to show text
+    if (update)
+        stage.update(); //update stage to show text
 }
 
 function createEmpty3DArray(xSize, ySize) {
@@ -142,9 +144,9 @@ function draw() {
     for (k = 0; k < blackRects.length; k++) {
         for (o = 0; o < blackRects[k].length; o++) {
             if (blackRects[k][o] == true) {
-                showText(innerText, k * rectSize, o * rectSize, 1);
+                showText(innerText, k * rectSize, o * rectSize, 1, false);
             } else {
-                showText(outerText, k * rectSize, o * rectSize, 1);
+                showText(outterText, k * rectSize, o * rectSize, 1, false);
             }
         }
     }
