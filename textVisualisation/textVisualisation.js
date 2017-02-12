@@ -6,7 +6,7 @@ var blackRects;
 //setting variables
 var canBackground, fps;
 var rectSize, thresholdAlpha, resolution;
-var innerText, outerText;
+var innerText, outterText;
 
 //call init to start
 init();
@@ -30,7 +30,7 @@ function init() {
         y: Math.floor(stage.canvas.height / rectSize)
     };
     innerText = "@";
-    outerText = ".";
+    outterText = ".";
     /*
      * SETTINGS END
      */
@@ -48,7 +48,7 @@ function clicked() {
     stage.removeAllChildren();
     text = new createjs.Text();
     text.set({
-        text: document.getElementById("textToShow").value,
+        text: document.getElementById('textToShow').value,
         textAlign: 'center',
         textBaseline: 'middle'
     });
@@ -117,6 +117,8 @@ function clicked() {
 }
 
 function draw() {
+    innerText = document.getElementById('innerText').value;
+    outterText = document.getElementById('outterText').value;
     for (k = 0; k < blackRects.length; k++) {
         for (o = 0; o < blackRects[k].length; o++) {
             if (blackRects[k][o] == true) {
@@ -135,7 +137,7 @@ function draw() {
             } else {
                 var text2 = new createjs.Text();
                 text2.set({
-                    text: outerText,
+                    text: outterText,
                     textAlign: 'center',
                     textBaseline: 'middle'
                 });
