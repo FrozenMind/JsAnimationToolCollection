@@ -9,31 +9,31 @@ var canBackground, fps;
 var rectSize, thresholdAlpha, resolution;
 var innerText, outerText;
 //call init to start
-$(document).ready(function () {
+$(document).ready(function() {
     init();
 });
 //initialize the project
 function init() {
-    //create stage
-    stage = new createjs.Stage("demoCanvas");
-    stage.canvas.style.background = canBackground;
     /*
      * SETTINGS
      */
     canBackground = "RGB(255,255,255)";
     fps = 500;
     rectSize = 10;
-    resolution = Math.floor((rectSize * rectSize) / 2);
     thresholdAlpha = 250;
-    rectResolution = {
-        x: Math.floor(stage.canvas.width / rectSize)
-        , y: Math.floor(stage.canvas.height / rectSize)
-    };
     $("#innerText").val("1");
     $("#outterText").val("0");
     /*
      * SETTINGS END
      */
+    //create stage
+    stage = new createjs.Stage("demoCanvas");
+    stage.canvas.style.background = canBackground;
+    resolution = Math.floor((rectSize * rectSize) / 2);
+    rectResolution = {
+        x: Math.floor(stage.canvas.width / rectSize),
+        y: Math.floor(stage.canvas.height / rectSize)
+    };
     //calculate array size by rectSize
     rawPixelData = [];
     pixelMatrix = createEmpty3DArray(rectResolution.x, rectResolution.y);
@@ -69,10 +69,10 @@ function getPixels(stage) {
     var arr = []
     for (i = 0; i < imageData.length; i = i + 4) {
         arr.push({
-            r: imageData[i]
-            , g: imageData[i + 1]
-            , b: imageData[i + 2]
-            , a: imageData[i + 3]
+            r: imageData[i],
+            g: imageData[i + 1],
+            b: imageData[i + 2],
+            a: imageData[i + 3]
         });
     }
     return arr;
@@ -81,9 +81,9 @@ function getPixels(stage) {
 function showText(msg, x, y, scale) {
     text = new createjs.Text();
     text.set({
-        text: msg
-        , textAlign: 'center'
-        , textBaseline: 'middle'
+        text: msg,
+        textAlign: 'center',
+        textBaseline: 'middle'
     });
     //scale text
     text.scaleX = scale;
@@ -128,8 +128,7 @@ function calcFilledAreas(rawData, array3D, res) {
             }
             if (blackPixelCounter >= res) {
                 matrixWithBlackAreas[i][j] = true;
-            }
-            else {
+            } else {
                 matrixWithBlackAreas[i][j] = false;
             }
         }
@@ -144,8 +143,7 @@ function draw() {
         for (o = 0; o < blackRects[k].length; o++) {
             if (blackRects[k][o] == true) {
                 showText(innerText, k * rectSize, o * rectSize, 1);
-            }
-            else {
+            } else {
                 showText(outerText, k * rectSize, o * rectSize, 1);
             }
         }
