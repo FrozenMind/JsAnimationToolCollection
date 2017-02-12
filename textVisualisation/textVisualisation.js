@@ -29,8 +29,8 @@ function init() {
         x: Math.floor(stage.canvas.width / rectSize),
         y: Math.floor(stage.canvas.height / rectSize)
     };
-    innerText = "@";
-    outterText = ".";
+    innerText = "1";
+    outterText = "0";
     /*
      * SETTINGS END
      */
@@ -68,8 +68,15 @@ function clicked() {
     //read pixel of canvas with set text
     pixels = stage.canvas.getContext('2d').getImageData(0, 0, stage.canvas.width, stage.canvas.height).data;
     stage.removeChild(text);
-    //stage.canvas.getContext('2d').putImageData(pixels, 20, 20);
 
+    //create empty 3 dimensional pixelMatrix to save black or white pixels
+    for (i = 0; i < pixelMatrix.length; i++) {
+        pixelMatrix[i] = new Array(rectResolution.y);
+        for (j = 0; j < pixelMatrix[i].length; j++) {
+            pixelMatrix[i][j] = [];
+        }
+    }
+    //1 pixel is made of red ,green, blue and alpha, so put 4 indexes into one object
     for (i = 0; i < pixels.length; i = i + 4) {
         sortedPixels.push({
             r: pixels[i],
@@ -78,24 +85,19 @@ function clicked() {
             a: pixels[i + 3]
         });
     }
-    for (i = 0; i < pixelMatrix.length; i++) {
-        pixelMatrix[i] = new Array(rectResolution.y);
-        for (j = 0; j < pixelMatrix[i].length; j++) {
-            pixelMatrix[i][j] = [];
-        }
-    }
-
+    //create grid with pixels, grid is made of rects with rectsize,
+    //in this is an array with alle pixels match this grid
     for (i = 0; i < sortedPixels.length; i++) {
         var x = Math.floor((i / rectSize) % rectResolution.x);
-        //var x = Math.floor((i - i * (i % 500)) / 10);
         var y = Math.floor(i / (rectResolution.x * rectSize * rectSize));
-        //console.log("x: " + x + " y: " + y + " i:" + i);
         pixelMatrix[x][y].push(i);
     }
     var bC;
+    //create 2 dimensional grid for rects which show if there are more black or more white pixels
     for (i = 0; i < blackRects.length; i++) {
         blackRects[i] = new Array(rectResolution.y);
     }
+    //tell every rects if its black or white
     for (i = 0; i < pixelMatrix.length; i++) {
         for (j = 0; j < pixelMatrix[i].length; j++) {
             bC = 0;
