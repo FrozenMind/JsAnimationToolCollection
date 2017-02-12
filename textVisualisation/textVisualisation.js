@@ -55,6 +55,9 @@ function tick() {
                 });
                 text2.x = kk * rectSize;
                 text2.y = oo * rectSize;
+                text2.snapToPixel = true;
+                var bb = text2.getBounds();
+                text2.cache(bb.x, bb.y, bb.width, bb.height);
                 stage.addChild(text2);
             } else {
                 var text2 = new createjs.Text();
@@ -65,6 +68,9 @@ function tick() {
                 });
                 text2.x = kk * rectSize;
                 text2.y = oo * rectSize;
+                text2.snapToPixel = true;
+                var bb = text2.getBounds()
+                text2.cache(bb.x, bb.y, bb.width, bb.height);
                 stage.addChild(text2);
             }
             stage.update();
@@ -99,6 +105,7 @@ function clicked() {
     stage.update(); //update stage to show text
     //read pixel of canvas with set text
     pixels = stage.canvas.getContext('2d').getImageData(0, 0, stage.canvas.width, stage.canvas.height).data;
+    stage.removeChild(text);
     //stage.canvas.getContext('2d').putImageData(pixels, 20, 20);
 
     for (i = 0; i < pixels.length; i = i + 4) {
@@ -142,7 +149,6 @@ function clicked() {
             }
         }
     }
-    stage.removeChild(text);
     createjs.Ticker.addEventListener("tick", tick);
     createjs.Ticker.setFPS(fps);
 }
