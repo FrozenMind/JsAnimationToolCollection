@@ -4,26 +4,23 @@
     <title>Text Visualisation</title>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
     <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+    <link rel="stylesheet" href="style.css">
     <script src="textVisualisation.js"></script>
 </head>
 
 <body>
-    <h2>Created By FrozenMind (<a href="www.games-broduction.com">games-broduction.com</a>)</h2>
-    <canvas id="demoCanvas" width="500" height="500"></canvas>
-    <form>
+    <h2>Created By <a href="www.games-broduction.com">www.games-broduction.com</a></h2>
+    <form id="inputForm">
         <label for="textToShow">Your Text To Show:
             <input id="textToShow" name="textToShow"> </label>
-        <br/>
         <label for="innerText">Inner Symbol:
             <input id="innerText" name="innerText"> </label>
-        <br/>
         <label for="outterText">Outter Symbol:
             <input id="outterText" name="outerText"> </label>
-        <br/>
         <button type="button" id="start">Start</button>
-        <br/>
         <button type="button" id="export">Export JPEG</button>
     </form>
+    <canvas id="demoCanvas" width="1920" height="1080"></canvas>
 </body>
 
 </html>
