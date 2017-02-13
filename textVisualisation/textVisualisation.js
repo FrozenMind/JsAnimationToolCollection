@@ -64,7 +64,7 @@ function startVisualisation() {
     }
     blackRects = calcFilledAreas(rawPixelData, pixelMatrix, resolution);
     
-    If ($("#animatedActiv").val() == true){
+    if($("#animatedActiv").val() == true){
         createjs.Ticker.addEventListener("tick", tick);
         createjs.Ticker.setFPS(fps);        
     }else{
@@ -165,11 +165,11 @@ function draw() {
 function drawAnimated() {
     innerText = $("#innerText").val();
     outterText = $("#outterText").val();
-    if (k < blackRects.length) {
-        if (o < blackRects[animatedK].length) {
-            if (blackRects[animatedK][animatedO] == true) {
+    if(k < blackRects.length) {
+        if(o < blackRects[animatedK].length) {
+            if(blackRects[animatedK][animatedO] == true) {
                 showText(innerText, animatedK * rectSize, animatedO * rectSize, 1, false);
-            } else {
+            }else{
                 showText(outterText, animatedK * rectSize, animatedO * rectSize, 1, false);
             }
             stage.update();
