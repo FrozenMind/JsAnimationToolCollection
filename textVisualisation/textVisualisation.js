@@ -174,8 +174,10 @@ function drawAnimated() {
             }
             stage.update();
             animatedO ++;
+        }else{
+            animatedK ++;
+            animatedO = 0;
         }
-        animatedK ++;
     }else{
         createjs.Ticker.paused = true;
         animatedK = 0;
