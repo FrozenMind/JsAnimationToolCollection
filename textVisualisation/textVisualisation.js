@@ -64,7 +64,7 @@ function startVisualisation() {
     }
     blackRects = calcFilledAreas(rawPixelData, pixelMatrix, resolution);
     
-    if($("#animatedActiv").val() == true){
+    if($("#animatedActiv").val() == "on"){
         createjs.Ticker.addEventListener("tick", tick);
         createjs.Ticker.setFPS(fps);        
     }else{
