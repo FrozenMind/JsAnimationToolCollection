@@ -8,6 +8,10 @@ var blackRects;
 var canBackground, fps;
 var rectSize, thresholdAlpha, resolution;
 var innerText, outerText;
+//variables vor animated drawing
+var animatedK = 0;
+var animatedO = 0;
+
 //call init to start
 $(document).ready(function() {
     init();
@@ -44,8 +48,7 @@ function init() {
 }
 //ticker, which controls the drawing
 function tick() {
-    if (createjs.Ticker.paused) return;
-    //    draw();
+        drawAnimated();
 }
 
 function startVisualisation() {
@@ -60,9 +63,13 @@ function startVisualisation() {
         pixelMatrix[x][y].push(i);
     }
     blackRects = calcFilledAreas(rawPixelData, pixelMatrix, resolution);
-    createjs.Ticker.addEventListener("tick", tick);
-    createjs.Ticker.setFPS(fps);
-    draw();
+    
+    If ($("#animatedActiv").val() == true){
+        createjs.Ticker.addEventListener("tick", tick);
+        createjs.Ticker.setFPS(fps);        
+    }else{
+        draw();
+    }    
 }
 
 function getPixels() {
@@ -152,6 +159,28 @@ function draw() {
     }
     stage.update();
     createjs.Ticker.paused = true;
+}
+
+
+function drawAnimated() {
+    innerText = $("#innerText").val();
+    outterText = $("#outterText").val();
+    if (k < blackRects.length) {
+        if (o < blackRects[animatedK].length) {
+            if (blackRects[animatedK][animatedO] == true) {
+                showText(innerText, animatedK * rectSize, animatedO * rectSize, 1, false);
+            } else {
+                showText(outterText, animatedK * rectSize, animatedO * rectSize, 1, false);
+            }
+            stage.update();
+            animatedO ++;
+        }
+        animatedK ++;
+    }else{
+        createjs.Ticker.paused = true;
+        animatedK = 0;
+        animatedO = 0;
+    }
 }
 
 function exportJPEG() {
