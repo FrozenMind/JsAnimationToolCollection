@@ -56,13 +56,16 @@ function init() {
 }
 //ticker, which controls the drawing
 function tick() {
+    if(!createjs.Ticker.paused){
         drawAnimated();
         fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
         console.log(fpsLabel.text);
 
         //update on every row
-        if(animatedO == 0)
+        if(animatedO == 0){
           stage.update();
+        }
+    }
 }
 
 function startVisualisation() {
