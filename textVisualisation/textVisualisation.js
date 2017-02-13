@@ -9,8 +9,9 @@ var canBackground, fps;
 var rectSize, thresholdAlpha, resolution;
 var innerText, outerText;
 //variables vor animated drawing
-var animatedK = 0;
-var animatedO = 0;
+var animatedK;
+var animatedO;
+var fpsLabel;
 
 //call init to start
 $(document).ready(function() {
@@ -21,7 +22,7 @@ function init() {
     /*
      * SETTINGS
      */
-    canBackground = "RGB(255,255,255)";
+    canBackground = "RGB(200,200,200)";
     fps = 500;
     rectSize = 10;
     thresholdAlpha = 250;
@@ -45,10 +46,23 @@ function init() {
     // register events
     $("#start").click(startVisualisation);
     $("#export").click(exportJPEG);
+
+    //fps label to show the fps
+    fpsLabel = new createjs.Text("-- fps", "bold 18px Arial", "#000");
+    fpsLabel.x = 10;
+    fpsLabel.y = 10;
+		stage.addChild(fpsLabel);
+    stage.update();
 }
 //ticker, which controls the drawing
 function tick() {
         drawAnimated();
+        fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
+        console.log(fpsLabel.text);
+
+        //update on every row
+        if(animatedO == 0)
+          stage.update();
 }
 
 function startVisualisation() {
@@ -65,6 +79,8 @@ function startVisualisation() {
     blackRects = calcFilledAreas(rawPixelData, pixelMatrix, resolution);
 
     if(document.getElementById('animatedActiv').checked == true){
+        animatedO = 0;
+        animatedK = 0;
         createjs.Ticker.addEventListener("tick", tick);
         createjs.Ticker.setFPS(fps);
     }else{
@@ -162,7 +178,7 @@ function draw() {
     createjs.Ticker.paused = true;
 }
 
-
+cacheCon = new createjs.Shape();
 function drawAnimated() {
     innerText = $("#innerText").val();
     outterText = $("#outterText").val();
@@ -173,11 +189,12 @@ function drawAnimated() {
             }else{
                 showText(outterText, animatedK * rectSize, animatedO * rectSize, 1, false);
             }
-            stage.update();
             animatedO ++;
         }else{
             animatedK ++;
             animatedO = 0;
+            cacheCon.uncache();
+            cacheCon.cache(0, 0, animatedK * rectSize, stage.canvas.height);
         }
     }else{
         createjs.Ticker.paused = true;
