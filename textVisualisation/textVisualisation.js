@@ -63,13 +63,13 @@ function startVisualisation() {
         pixelMatrix[x][y].push(i);
     }
     blackRects = calcFilledAreas(rawPixelData, pixelMatrix, resolution);
-    
-    if($("#animatedActiv").val() == "on"){
+
+    if(document.getElementById('animatedActiv').checked == true){
         createjs.Ticker.addEventListener("tick", tick);
-        createjs.Ticker.setFPS(fps);        
+        createjs.Ticker.setFPS(fps);
     }else{
         draw();
-    }    
+    }
 }
 
 function getPixels() {
@@ -100,6 +100,7 @@ function showText(msg, x, y, scale, update) {
     b = text.getBounds();
     text.x = x;
     text.y = y;
+    text.snapToPixel = true;
     stage.addChild(text);
     if (update)
         stage.update(); //update stage to show text
