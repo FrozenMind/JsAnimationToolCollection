@@ -165,8 +165,8 @@ function draw() {
 function drawAnimated() {
     innerText = $("#innerText").val();
     outterText = $("#outterText").val();
-    if(k < blackRects.length) {
-        if(o < blackRects[animatedK].length) {
+    if(animatedK < blackRects.length) {
+        if(animatedO < blackRects[animatedK].length) {
             if(blackRects[animatedK][animatedO] == true) {
                 showText(innerText, animatedK * rectSize, animatedO * rectSize, 1, false);
             }else{
