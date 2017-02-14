@@ -71,6 +71,7 @@ function tick() {
 function startVisualisation() {
     createjs.Ticker.paused = false;
     stage.removeAllChildren();
+    stage.addChild(fpsLabel);	//add fps label again
     showText($("#textToShow").val(), stage.canvas.width / 2, stage.canvas.height / 2, 20, true);
     rawPixelData = getPixels();
     stage.removeChild(text);
@@ -207,6 +208,7 @@ function drawAnimated() {
 }
 
 function exportJPEG() {
+    stage.removeChild(fpsLabel);
     //generate the url using toDataURL
     canvas = document.getElementById("demoCanvas");
     var img = canvas.toDataURL("image/png;base64;");
