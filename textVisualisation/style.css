@@ -1,7 +1,15 @@
-#demoCanvas{
-  float: left;
+html {
+    margin: 0;
+    padding: 0;
 }
 
-#inputForm{
-  float: left;
+#demoCanvas {
+    margin: 0;
+    padding: 0;
+}
+
+#gui {
+    position: absolute;
+    right: 250;
+    top: 5;
 }

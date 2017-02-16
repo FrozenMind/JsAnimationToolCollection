@@ -12,11 +12,38 @@ var innerText, outerText;
 var animatedK;
 var animatedO;
 var fpsLabel;
-
-//call init to start
-$(document).ready(function() {
+var guiElements; // data object for gui
+var gui; // actual gui object (dat.gui)
+/////////////////////////////////
+/// Start Point
+$(document).ready(function () {
+    preInit();
     init();
 });
+// PreInit
+function preInit() {
+    //Initialise GUI
+    guiElements = {
+        Message: ""
+        , InnerText: "1"
+        , OuterText: "0"
+        , IsAnimated: false
+        , Start: startVisualisation
+        , ExportJPG: exportJPEG
+    };
+    gui = new dat.GUI();
+    gui.add(guiElements, 'Message').name("Your text: ");
+    gui.add(guiElements, 'InnerText').name("Inner text: ");
+    gui.add(guiElements, 'OuterText').name("Outer text: ");
+    gui.add(guiElements, 'IsAnimated').name("Animated Drawing");
+    gui.add(guiElements, 'Start').name("Start");
+    gui.add(guiElements, 'ExportJPG').name("Export");
+    // set canvas size
+    $("#demoCanvas").attr({
+        width: $("body").width()
+        , height: $("body").height()
+    });
+};
 //initialize the project
 function init() {
     /*
@@ -26,8 +53,6 @@ function init() {
     fps = 500;
     rectSize = 10;
     thresholdAlpha = 250;
-    $("#innerText").val("1");
-    $("#outterText").val("0");
     /*
      * SETTINGS END
      */
@@ -36,34 +61,30 @@ function init() {
     stage.canvas.style.background = canBackground;
     resolution = Math.floor((rectSize * rectSize) / 2);
     rectResolution = {
-        x: Math.floor(stage.canvas.width / rectSize),
-        y: Math.floor(stage.canvas.height / rectSize)
+        x: Math.floor(stage.canvas.width / rectSize)
+        , y: Math.floor(stage.canvas.height / rectSize)
     };
     //calculate array size by rectSize
     rawPixelData = [];
     pixelMatrix = createEmpty3DArray(rectResolution.x, rectResolution.y);
     blackRects = createFilled2DArray(rectResolution.x, rectResolution.y);
-    // register events
-    $("#start").click(startVisualisation);
-    $("#export").click(exportJPEG);
-
     //fps label to show the fps
     fpsLabel = new createjs.Text("-- fps", "bold 18px Arial", "#000");
+    fpsLabel.visible = guiElements.IsAnimated;
     fpsLabel.x = 10;
     fpsLabel.y = 10;
-		stage.addChild(fpsLabel);
+    stage.addChild(fpsLabel);
     stage.update();
 }
 //ticker, which controls the drawing
 function tick() {
-    if(!createjs.Ticker.paused){
+    if (!createjs.Ticker.paused) {
         drawAnimated();
         fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
         console.log(fpsLabel.text);
-
         //update on every row
-        if(animatedO == 0){
-          stage.update();
+        if (animatedO == 0) {
+            stage.update();
         }
     }
 }
@@ -71,8 +92,9 @@ function tick() {
 function startVisualisation() {
     createjs.Ticker.paused = false;
     stage.removeAllChildren();
-    stage.addChild(fpsLabel);	//add fps label again
-    showText($("#textToShow").val(), stage.canvas.width / 2, stage.canvas.height / 2, 20, true);
+    fpsLabel.visible = guiElements.IsAnimated;
+    stage.addChild(fpsLabel); //add fps label again
+    showText(guiElements.Message, stage.canvas.width / 2, stage.canvas.height / 2, 20, true);
     rawPixelData = getPixels();
     stage.removeChild(text);
     for (i = 0; i < rawPixelData.length; i++) {
@@ -81,13 +103,13 @@ function startVisualisation() {
         pixelMatrix[x][y].push(i);
     }
     blackRects = calcFilledAreas(rawPixelData, pixelMatrix, resolution);
-
-    if(document.getElementById('animatedActiv').checked == true){
+    if (guiElements.IsAnimated) {
         animatedO = 0;
         animatedK = 0;
         createjs.Ticker.addEventListener("tick", tick);
         createjs.Ticker.setFPS(fps);
-    }else{
+    }
+    else {
         draw();
     }
 }
@@ -97,10 +119,10 @@ function getPixels() {
     var arr = []
     for (i = 0; i < imageData.length; i = i + 4) {
         arr.push({
-            r: imageData[i],
-            g: imageData[i + 1],
-            b: imageData[i + 2],
-            a: imageData[i + 3]
+            r: imageData[i]
+            , g: imageData[i + 1]
+            , b: imageData[i + 2]
+            , a: imageData[i + 3]
         });
     }
     return arr;
@@ -109,9 +131,9 @@ function getPixels() {
 function showText(msg, x, y, scale, update) {
     text = new createjs.Text();
     text.set({
-        text: msg,
-        textAlign: 'center',
-        textBaseline: 'middle'
+        text: msg
+        , textAlign: 'center'
+        , textBaseline: 'middle'
     });
     //scale text
     text.scaleX = scale;
@@ -122,8 +144,7 @@ function showText(msg, x, y, scale, update) {
     text.y = y;
     text.snapToPixel = true;
     stage.addChild(text);
-    if (update)
-        stage.update(); //update stage to show text
+    if (update) stage.update(); //update stage to show text
 }
 
 function createEmpty3DArray(xSize, ySize) {
@@ -158,7 +179,8 @@ function calcFilledAreas(rawData, array3D, res) {
             }
             if (blackPixelCounter >= res) {
                 matrixWithBlackAreas[i][j] = true;
-            } else {
+            }
+            else {
                 matrixWithBlackAreas[i][j] = false;
             }
         }
@@ -167,13 +189,14 @@ function calcFilledAreas(rawData, array3D, res) {
 }
 
 function draw() {
-    innerText = $("#innerText").val();
-    outterText = $("#outterText").val();
+    innerText = guiElements.InnerText;
+    outterText = guiElements.OuterText;
     for (k = 0; k < blackRects.length; k++) {
         for (o = 0; o < blackRects[k].length; o++) {
             if (blackRects[k][o] == true) {
                 showText(innerText, k * rectSize, o * rectSize, 1, false);
-            } else {
+            }
+            else {
                 showText(outterText, k * rectSize, o * rectSize, 1, false);
             }
         }
@@ -181,26 +204,29 @@ function draw() {
     stage.update();
     createjs.Ticker.paused = true;
 }
-
 cacheCon = new createjs.Shape();
+
 function drawAnimated() {
-    innerText = $("#innerText").val();
-    outterText = $("#outterText").val();
-    if(animatedK < blackRects.length) {
-        if(animatedO < blackRects[animatedK].length) {
-            if(blackRects[animatedK][animatedO] == true) {
+    innerText = guiElements.InnerText;
+    outterText = guiElements.OuterText;
+    if (animatedK < blackRects.length) {
+        if (animatedO < blackRects[animatedK].length) {
+            if (blackRects[animatedK][animatedO] == true) {
                 showText(innerText, animatedK * rectSize, animatedO * rectSize, 1, false);
-            }else{
+            }
+            else {
                 showText(outterText, animatedK * rectSize, animatedO * rectSize, 1, false);
             }
-            animatedO ++;
-        }else{
-            animatedK ++;
+            animatedO++;
+        }
+        else {
+            animatedK++;
             animatedO = 0;
             cacheCon.uncache();
             cacheCon.cache(0, 0, animatedK * rectSize, stage.canvas.height);
         }
-    }else{
+    }
+    else {
         createjs.Ticker.paused = true;
         animatedK = 0;
         animatedO = 0;

@@ -4,25 +4,15 @@
     <title>Text Visualisation</title>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
     <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+    <script src="lib/dat.gui.min.js">
+    </script>
     <link rel="stylesheet" href="style.css">
     <script src="textVisualisation.js"></script>
 </head>
 
 <body>
-    <h2>Created By <a href="www.games-broduction.com">www.games-broduction.com</a></h2>
-    <form id="inputForm">
-        <label for="textToShow">Your Text To Show:
-            <input id="textToShow" name="textToShow"> </label>
-        <label for="innerText">Inner Symbol:
-            <input id="innerText" name="innerText"> </label>
-        <label for="outterText">Outter Symbol:
-            <input id="outterText" name="outerText"> </label>
-        <label for="animatedActiv">Animated Drawing:
-            <input type="checkbox" id="animatedActiv" name="animatedActiv"> </label>
-        <button type="button" id="start">Start</button>
-        <button type="button" id="export">Export JPEG</button>
-    </form>
-    <canvas id="demoCanvas" width="1920" height="1080"></canvas>
+    <div id="gui"></div>
+    <canvas id="demoCanvas"></canvas>
 </body>
 
 </html>
