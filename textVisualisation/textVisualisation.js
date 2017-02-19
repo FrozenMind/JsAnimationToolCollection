@@ -81,7 +81,6 @@ function tick() {
     if (!createjs.Ticker.paused) {
         drawAnimated();
         fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
-        console.log(fpsLabel.text);
         //update on every row
         if (animatedO == 0) {
             stage.update();
@@ -176,7 +175,7 @@ function createFilled2DArray(xSize, ySize) {
 }
 
 function calcFilledAreas(pM, res) {
-    var blackPixelCounter;
+    var blackPixelCounter = 0;
     var matrixWithBlackAreas = createFilled2DArray(pM.length, pM[0].length);
     for (i = 0; i < pM.length; i++) {
         for (j = 0; j < pM[i].length; j++) {
