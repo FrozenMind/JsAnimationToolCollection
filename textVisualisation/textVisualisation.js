@@ -16,7 +16,7 @@ var guiElements; // data object for gui
 var gui; // actual gui object (dat.gui)
 /////////////////////////////////
 /// Start Point
-$(document).ready(function () {
+$(document).ready(function() {
     preInit();
     init();
 });
@@ -24,12 +24,12 @@ $(document).ready(function () {
 function preInit() {
     //Initialise GUI
     guiElements = {
-        Message: ""
-        , InnerText: "1"
-        , OuterText: "0"
-        , IsAnimated: false
-        , Start: startVisualisation
-        , ExportJPG: exportJPEG
+        Message: "",
+        InnerText: "1",
+        OuterText: "0",
+        IsAnimated: false,
+        Start: startVisualisation,
+        ExportJPG: exportJPEG
     };
     gui = new dat.GUI();
     gui.add(guiElements, 'Message').name("Your text: ");
@@ -40,8 +40,8 @@ function preInit() {
     gui.add(guiElements, 'ExportJPG').name("Export");
     // set canvas size
     $("#demoCanvas").attr({
-        width: $("body").width()
-        , height: $("body").height()
+        width: $("body").width(),
+        height: $("body").height()
     });
 };
 //initialize the project
@@ -49,7 +49,7 @@ function init() {
     /*
      * SETTINGS
      */
-    canBackground = "RGB(200,200,200)";
+    canBackground = "RGB(255,255,255)";
     fps = 500;
     rectSize = 10;
     thresholdAlpha = 250;
@@ -61,12 +61,12 @@ function init() {
     stage.canvas.style.background = canBackground;
     resolution = Math.floor((rectSize * rectSize) / 2);
     rectResolution = {
-        x: Math.floor(stage.canvas.width / rectSize)
-        , y: Math.floor(stage.canvas.height / rectSize)
+        x: Math.floor(stage.canvas.width / rectSize),
+        y: Math.floor(stage.canvas.height / rectSize)
     };
     //calculate array size by rectSize
     rawPixelData = [];
-    pixelMatrix = createEmpty3DArray(rectResolution.x, rectResolution.y);
+    pixelMatrix = createEmpty3DArray(rectResolution.x + 1, rectResolution.y + 1);
     blackRects = createFilled2DArray(rectResolution.x, rectResolution.y);
     //fps label to show the fps
     fpsLabel = new createjs.Text("-- fps", "bold 18px Arial", "#000");
@@ -98,42 +98,51 @@ function startVisualisation() {
     rawPixelData = getPixels();
     stage.removeChild(text);
     for (i = 0; i < rawPixelData.length; i++) {
-        var x = Math.floor((i / rectSize) % rectResolution.x);
-        var y = Math.floor(i / (rectResolution.x * rectSize * rectSize));
-        pixelMatrix[x][y].push(i);
+        for (j = 0; j < rawPixelData[i].length; j++) {
+            x = Math.floor(i / rectSize);
+            y = Math.floor(j / rectSize);
+            pixelMatrix[x][y].push(rawPixelData[i][j]);
+        }
     }
-    blackRects = calcFilledAreas(rawPixelData, pixelMatrix, resolution);
+    blackRects = calcFilledAreas(pixelMatrix, resolution);
     if (guiElements.IsAnimated) {
         animatedO = 0;
         animatedK = 0;
         createjs.Ticker.addEventListener("tick", tick);
         createjs.Ticker.setFPS(fps);
-    }
-    else {
+    } else {
         draw();
     }
 }
 
 function getPixels() {
     var imageData = stage.canvas.getContext('2d').getImageData(0, 0, stage.canvas.width, stage.canvas.height).data;
-    var arr = []
+    var arr = [];
     for (i = 0; i < imageData.length; i = i + 4) {
         arr.push({
-            r: imageData[i]
-            , g: imageData[i + 1]
-            , b: imageData[i + 2]
-            , a: imageData[i + 3]
+            r: imageData[i],
+            g: imageData[i + 1],
+            b: imageData[i + 2],
+            a: imageData[i + 3]
         });
     }
-    return arr;
+    var matrix = createFilled2DArray(stage.canvas.width, stage.canvas.height);
+    var index = 0;
+    for (i = 0; i < stage.canvas.height; i++) {
+        for (j = 0; j < stage.canvas.width; j++) {
+            matrix[j][i] = arr[index];
+            index++;
+        }
+    }
+    return matrix;
 }
 
 function showText(msg, x, y, scale, update) {
     text = new createjs.Text();
     text.set({
-        text: msg
-        , textAlign: 'center'
-        , textBaseline: 'middle'
+        text: msg,
+        textAlign: 'center',
+        textBaseline: 'middle'
     });
     //scale text
     text.scaleX = scale;
@@ -166,23 +175,22 @@ function createFilled2DArray(xSize, ySize) {
     return array2D;
 }
 
-function calcFilledAreas(rawData, array3D, res) {
+function calcFilledAreas(pM, res) {
     var blackPixelCounter;
-    var matrixWithBlackAreas = createFilled2DArray(array3D.length, array3D[0].length);
-    for (i = 0; i < array3D.length; i++) {
-        for (j = 0; j < array3D[i].length; j++) {
-            blackPixelCounter = 0;
-            for (k = 0; k < array3D[i][j].length; k++) {
-                if (rawData[array3D[i][j][k]].a >= thresholdAlpha) {
+    var matrixWithBlackAreas = createFilled2DArray(pM.length, pM[0].length);
+    for (i = 0; i < pM.length; i++) {
+        for (j = 0; j < pM[i].length; j++) {
+            for (k = 0; k < pM[i][j].length; k++) {
+                if (pM[i][j][k].a >= thresholdAlpha) {
                     blackPixelCounter++;
                 }
             }
             if (blackPixelCounter >= res) {
                 matrixWithBlackAreas[i][j] = true;
-            }
-            else {
+            } else {
                 matrixWithBlackAreas[i][j] = false;
             }
+            blackPixelCounter = 0;
         }
     }
     return matrixWithBlackAreas;
@@ -195,8 +203,7 @@ function draw() {
         for (o = 0; o < blackRects[k].length; o++) {
             if (blackRects[k][o] == true) {
                 showText(innerText, k * rectSize, o * rectSize, 1, false);
-            }
-            else {
+            } else {
                 showText(outterText, k * rectSize, o * rectSize, 1, false);
             }
         }
@@ -213,20 +220,17 @@ function drawAnimated() {
         if (animatedO < blackRects[animatedK].length) {
             if (blackRects[animatedK][animatedO] == true) {
                 showText(innerText, animatedK * rectSize, animatedO * rectSize, 1, false);
-            }
-            else {
+            } else {
                 showText(outterText, animatedK * rectSize, animatedO * rectSize, 1, false);
             }
             animatedO++;
-        }
-        else {
+        } else {
             animatedK++;
             animatedO = 0;
             cacheCon.uncache();
             cacheCon.cache(0, 0, animatedK * rectSize, stage.canvas.height);
         }
-    }
-    else {
+    } else {
         createjs.Ticker.paused = true;
         animatedK = 0;
         animatedO = 0;
