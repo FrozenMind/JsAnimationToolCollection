@@ -1,6 +1,6 @@
 var stage;
 var cells = [];
-var cellAmount, cellSize;
+var cellAmount, cellRadius;
 var width, height;
 
 $(document).ready(function() {
@@ -12,7 +12,7 @@ function init() {
      * SETTING AREA
      */
     cellAmount = 30;
-    cellSize = 5;
+    cellRadius = 5;
     /*
      * END SETTING AREA
      */
@@ -34,13 +34,22 @@ function init() {
 function tick() {
     for (i = cells.length - 1; i >= 0; i--) {
         //check if cells hit borders
-        if (cells[i].cell.x < 0 + cellSize || cells[i].cell.x > width - cellSize) {
+        if (cells[i].cell.x < 0 + cellRadius || cells[i].cell.x > width - cellRadius) {
             cells[i].speedX *= -1;
-        } else if (cells[i].cell.y < 0 + cellSize || cells[i].cell.y > height - cellSize) {
+        } else if (cells[i].cell.y < 0 + cellRadius || cells[i].cell.y > height - cellRadius) {
             cells[i].speedY *= -1;
         }
-        //TODO: check if cell hit another cell
-        //and fuse cells if they hit each other by splice one and double add there size to the other one
+        for (j = i - 1; j >= 0; j--) {
+            var d = Math.sqrt(Math.pow(cells[i].cell.x - cells[j].cell.x, 2) + Math.pow(cells[i].cell.y - cells[j].cell.y, 2));
+            if (d < cellRadius) {
+                console.log("hitted");
+                //cells[j].cell.radius += cells[i].cell.radius; //TODO: increase radius of cell
+                stage.removeChild(cells[i].cell);
+                cells.splice(i, 1);
+                break;
+
+            }
+        }
         cells[i].update();
     }
     stage.update();
@@ -50,12 +59,12 @@ function tick() {
 function spawncells() {
     counter = 0;
     while (counter < cellAmount) {
-        x = Math.random() * (width - cellSize * 2) + cellSize;
-        y = Math.random() * (height - cellSize * 2) + cellSize;
+        x = Math.random() * (width - cellRadius * 2) + cellRadius;
+        y = Math.random() * (height - cellRadius * 2) + cellRadius;
         hit = false;
         for (i = 0; i < cells.length; i++) {
             dist = Math.sqrt(Math.pow(cells[i].cell.x - x, 2) + Math.pow(cells[i].cell.y - y, 2))
-            if (dist < cellSize * 2) {
+            if (dist < cellRadius * 2) {
                 hit = true;
             }
         }
