@@ -41,9 +41,9 @@ function tick() {
         }
         for (j = i - 1; j >= 0; j--) {
             var d = Math.sqrt(Math.pow(cells[i].cell.x - cells[j].cell.x, 2) + Math.pow(cells[i].cell.y - cells[j].cell.y, 2));
-            if (d < cellRadius) {
+            if (d < cellRadius * 2) {
                 console.log("hitted");
-                //cells[j].cell.radius += cells[i].cell.radius; //TODO: increase radius of cell
+                cells[j].cell.radius += cells[i].cell.radius; //TODO: increase radius of cell
                 stage.removeChild(cells[i].cell);
                 cells.splice(i, 1);
                 break;
