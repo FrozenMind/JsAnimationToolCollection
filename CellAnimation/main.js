@@ -1,6 +1,7 @@
 var stage;
 var cells = [];
-var cellAmount, cellRadius;
+var cellAmount, cellRadius, plopCount;
+var fps;
 var width, height;
 
 $(document).ready(function() {
@@ -11,8 +12,10 @@ function init() {
     /*
      * SETTING AREA
      */
-    cellAmount = 30;
+    cellAmount = 50;
     cellRadius = 5;
+    fps = 60;
+    plopCount = 5;
     /*
      * END SETTING AREA
      */
@@ -28,22 +31,23 @@ function init() {
 
     spawncells();
     createjs.Ticker.addEventListener("tick", tick);
-    createjs.Ticker.setFPS(30);
+    createjs.Ticker.setFPS(fps);
 }
 
 function tick() {
     for (i = cells.length - 1; i >= 0; i--) {
         //check if cells hit borders
-        if (cells[i].cell.x < 0 + cellRadius || cells[i].cell.x > width - cellRadius) {
+        if (cells[i].cell.x < 0 + cells[i].radius || cells[i].cell.x > width - cells[i].radius) {
             cells[i].speedX *= -1;
-        } else if (cells[i].cell.y < 0 + cellRadius || cells[i].cell.y > height - cellRadius) {
+        } else if (cells[i].cell.y < 0 + cells[i].radius || cells[i].cell.y > height - cells[i].radius) {
             cells[i].speedY *= -1;
         }
         for (j = i - 1; j >= 0; j--) {
             var d = Math.sqrt(Math.pow(cells[i].cell.x - cells[j].cell.x, 2) + Math.pow(cells[i].cell.y - cells[j].cell.y, 2));
-            if (d < cellRadius * 2) {
+            if (d < cells[j].radius + cells[i].radius) {
                 console.log("hitted");
-                cells[j].cell.radius += cells[i].cell.radius; //TODO: increase radius of cell
+                cells[j].radius += cells[i].radius;
+                cells[j].cell.graphics.drawCircle(0, 0, cells[j].radius);
                 stage.removeChild(cells[i].cell);
                 cells.splice(i, 1);
                 break;
@@ -51,6 +55,16 @@ function tick() {
             }
         }
         cells[i].update();
+    }
+    for (i = cells.length - 1; i >= 0; i--) {
+        //cell explodes when its to huge
+        if (cells[i].radius > cellRadius * plopCount) {
+            for (j = 0; j < Math.floor(cells[i].radius / cellRadius); j++) {
+                //cells.push(new Cell(cells[i].cell.x, cells[i].cell.y));
+            }
+            stage.removeChild(cells[i].cell);
+            cells.splice(i, 1);
+        }
     }
     stage.update();
 }
@@ -73,4 +87,5 @@ function spawncells() {
             counter++;
         }
     }
+    console.log('Cells spawned');
 }

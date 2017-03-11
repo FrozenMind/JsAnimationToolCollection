@@ -6,8 +6,8 @@ function Cell(x, y) {
     this.cell = new createjs.Shape();
     this.cell.x = x;
     this.cell.y = y;
-    this.cell.radius = cellRadius;
-    this.cell.graphics.beginFill('#cc0000').drawCircle(0, 0, cellRadius);
+    this.radius = cellRadius;
+    this.cell.graphics.beginFill('#cc0000').drawCircle(0, 0, this.radius);
     stage.addChild(this.cell);
 }
 
