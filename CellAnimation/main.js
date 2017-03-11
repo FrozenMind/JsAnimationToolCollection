@@ -61,6 +61,7 @@ function tick() {
         if (cells[i].radius > cellRadius * plopCount) {
             for (j = 0; j < Math.floor(cells[i].radius / cellRadius); j++) {
                 //cells.push(new Cell(cells[i].cell.x, cells[i].cell.y));
+                //TODO: spawn new cells
             }
             stage.removeChild(cells[i].cell);
             cells.splice(i, 1);
