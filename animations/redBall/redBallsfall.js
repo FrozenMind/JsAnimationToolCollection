@@ -2,7 +2,9 @@ var stage;
 var circle;
 var arr = [];
 
-init();
+$(document).ready(function () {
+    init();
+});
 
 function init() {
     stage = new createjs.Stage("demoCanvas");

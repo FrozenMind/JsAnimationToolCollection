@@ -4,7 +4,10 @@ var drops = [];
 var cloud, rain;
 //settings variables
 var windSpeed, fps, rainOptions, rainRatio, canBackground;
-init();
+
+$(document).ready(function () {
+    init();
+});
 
 function init() {
     /*
@@ -16,13 +19,13 @@ function init() {
     canBackground = "RGB(40,40,40)";
     //to set the rain options, dont remove an attribute: if u want to use default value set it undefined
     rainOptions = {
-        minHeight: 5
-        , maxHeight: 7
-        , minWidth: 4
-        , maxWidth: 6
-        , dropSpeed: 200
-        , blueStartColor: 100
-        , blueEndColor: 200 //max is 256
+        minHeight: 5,
+        maxHeight: 7,
+        minWidth: 4,
+        maxWidth: 6,
+        dropSpeed: 200,
+        blueStartColor: 100,
+        blueEndColor: 200 //max is 256
     };
     /*
      * SETTINGS END
