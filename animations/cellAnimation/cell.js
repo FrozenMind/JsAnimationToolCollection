@@ -16,7 +16,7 @@ Cell.prototype.update = function() {
     this.cell.y += this.speedY;
 }
 
-Cell.prototype.setNewSpeed = function() {
-    this.speedX = Math.floor(Math.random() * this.speed * 2 - this.speed);
-    this.speedY = (this.speed - Math.abs(this.speedX)) * Math.floor(Math.random() * 2 - 1);
+Cell.prototype.setNewSpeed = function(x, y) {
+    this.speedX = x
+    this.speedY = y
 }

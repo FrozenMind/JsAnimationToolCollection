@@ -47,7 +47,6 @@ function tick() {
         for (j = i - 1; j >= 0; j--) {
             var d = Math.sqrt(Math.pow(cells[i].cell.x - cells[j].cell.x, 2) + Math.pow(cells[i].cell.y - cells[j].cell.y, 2));
             if (d < cells[j].radius + cells[i].radius) {
-                console.log("hitted");
                 cells[j].radius += cells[i].radius;
                 cells[j].cell.graphics.drawCircle(0, 0, cells[j].radius);
                 stage.removeChild(cells[i].cell);
@@ -65,6 +64,7 @@ function tick() {
             var max = Math.floor(cells[i].radius / cellRadius);
             for (j = 0; j < max; j++) {
                 cells.push(new Cell(cells[i].cell.x + Math.cos(360 * (j / max - 1)) * cellRadius * 5, cells[i].cell.y + Math.sin(360 * (j / max - 1)) * cellRadius * 5));
+                cells[cells.length - 1].setNewSpeed(cells[cells.length - 1].speed * Math.cos(360 * (j / max - 1)), cells[cells.length - 1].speed * Math.sin(360 * (j / max - 1)));
             }
             stage.removeChild(cells[i].cell);
             cells.splice(i, 1);
