@@ -2,11 +2,7 @@ var stage;
 var circle;
 var arr = [];
 
-$(document).ready(function () {
-    init();
-});
-
-function init() {
+function redBallsFallInit() {
     stage = new createjs.Stage("demoCanvas");
     for (i = 0; i <
         arr.length; i++) {

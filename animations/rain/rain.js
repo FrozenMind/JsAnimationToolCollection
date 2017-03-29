@@ -5,11 +5,7 @@ var cloud, rain;
 //settings variables
 var windSpeed, fps, rainOptions, rainRatio, canBackground;
 
-$(document).ready(function () {
-    init();
-});
-
-function init() {
+function rainInit() {
     /*
      * SETTINGS
      */
@@ -56,11 +52,11 @@ function Raindrop(opts) {
     this.cir.y = -this.height;
     this.speedX = windSpeed / (this.height + this.width); //its the wind effect
     this.speedY = (opts.dropSpeed || 100) / (this.height + this.width); //bigger raindrop should fall faster
-    this.update = function () {
+    this.update = function() {
         this.cir.x += this.speedX;
         this.cir.y += this.speedY;
     };
-    this.show = function () {
+    this.show = function() {
         this.cir.graphics.beginFill("rgb(0,0," + this.b + ")").drawEllipse(this.cir.x, this.cir.y, this.width, this.height);
         this.cir.updateCache();
         stage.addChild(this.cir);
@@ -69,12 +65,12 @@ function Raindrop(opts) {
 //rain controls drops, so i can create a modify the constructor to make things like color rain
 function Rain(opts) {
     this.drops = [];
-    this.addDrops = function (count) {
+    this.addDrops = function(count) {
         for (i = 1; i < count; i++) {
             this.drops.push(new Raindrop(opts));
         }
     };
-    this.update = function () {
+    this.update = function() {
         for (i = this.drops.length - 1; i >= 0; i--) {
             this.drops[i].update();
             if (this.drops[i].cir.y > stage.canvas.height) {
@@ -83,7 +79,7 @@ function Rain(opts) {
             }
         }
     };
-    this.show = function () {
+    this.show = function() {
         for (var i = 0; i < this.drops.length; i++) {
             var drop = this.drops[i];
             drop.cir.snapToPixel = true;
@@ -96,5 +92,5 @@ function Rain(opts) {
 function Cloud() {
     this.cir = [];
     this.speedX = windSpeed; //wind moves clouds
-    this.update = function () {};
+    this.update = function() {};
 }

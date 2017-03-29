@@ -4,11 +4,7 @@ var cellAmount, cellRadius, plopCount, cellSpeed;
 var fps;
 var width, height;
 
-$(document).ready(function() {
-    init();
-});
-
-function init() {
+function cellAnimationInit() {
     /*
      * SETTING AREA
      */
@@ -16,15 +12,10 @@ function init() {
     cellRadius = 5;
     fps = 60;
     plopCount = 5;
-    cellSpeed = 5;
+    cellSpeed = 3;
     /*
      * END SETTING AREA
      */
-    //set canvas fullscreen
-    $("#demoCanvas").attr({
-        width: $("body").width(),
-        height: $("body").height()
-    });
     stage = new createjs.Stage('demoCanvas');
     stage.canvas.style.background = '#000000';
     width = stage.canvas.width;
@@ -95,7 +86,7 @@ function spawncells() {
         hit = false;
         for (i = 0; i < cells.length; i++) {
             dist = Math.sqrt(Math.pow(cells[i].cell.x - x, 2) + Math.pow(cells[i].cell.y - y, 2))
-            if (dist < cellRadius * 2) {
+            if (dist < (cellRadius + cellSpeed) * 2) {
                 hit = true;
             }
         }
