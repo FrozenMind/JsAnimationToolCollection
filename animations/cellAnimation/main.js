@@ -1,6 +1,6 @@
 var stage;
 var cells = [];
-var cellAmount, cellRadius, plopCount;
+var cellAmount, cellRadius, plopCount, cellSpeed;
 var fps;
 var width, height;
 
@@ -16,6 +16,7 @@ function init() {
     cellRadius = 5;
     fps = 60;
     plopCount = 5;
+    cellSpeed = 5;
     /*
      * END SETTING AREA
      */
@@ -37,10 +38,19 @@ function init() {
 function tick() {
     for (i = cells.length - 1; i >= 0; i--) {
         //check if cells hit borders, return speed if they do
-        if (cells[i].cell.x < 0 + cells[i].radius || cells[i].cell.x > width - cells[i].radius) {
+        //set cell to border, so it dont escape
+        if (cells[i].cell.x <= 0 + cells[i].radius) {
             cells[i].speedX *= -1;
-        } else if (cells[i].cell.y < 0 + cells[i].radius || cells[i].cell.y > height - cells[i].radius) {
+            cells[i].cell.x = 0 + cells[i].radius;
+        } else if (cells[i].cell.x >= width - cells[i].radius) {
+            cells[i].speedX *= -1;
+            cells[i].cell.x = width - cells[i].radius;
+        } else if (cells[i].cell.y <= 0 + cells[i].radius) {
             cells[i].speedY *= -1;
+            cells[i].cell.y = 0 + cells[i].radius;
+        } else if (cells[i].cell.y >= height - cells[i].radius) {
+            cells[i].speedY *= -1;
+            cells[i].cell.y = height - cells[i].radius;
         }
         var spliced = false;
         //check hit with other cells
@@ -63,7 +73,9 @@ function tick() {
         if (cells[i].radius > cellRadius * plopCount) {
             var max = Math.floor(cells[i].radius / cellRadius);
             for (j = 0; j < max; j++) {
-                cells.push(new Cell(cells[i].cell.x + Math.cos(360 * (j / max - 1)) * cellRadius * 5, cells[i].cell.y + Math.sin(360 * (j / max - 1)) * cellRadius * 5));
+                var newX = cells[i].cell.x + Math.cos(360 * (j / max - 1)) * cellRadius * 5;
+                var newY = cells[i].cell.y + Math.sin(360 * (j / max - 1)) * cellRadius * 5;
+                cells.push(new Cell(newX, newY));
                 cells[cells.length - 1].setNewSpeed(cells[cells.length - 1].speed * Math.cos(360 * (j / max - 1)), cells[cells.length - 1].speed * Math.sin(360 * (j / max - 1)));
             }
             stage.removeChild(cells[i].cell);
@@ -76,6 +88,7 @@ function tick() {
 //cells spawn and check that cells dont hit each other on beginning
 function spawncells() {
     counter = 0;
+    var spawnTimeout = 0;
     while (counter < cellAmount) {
         x = Math.random() * (width - cellRadius * 2) + cellRadius;
         y = Math.random() * (height - cellRadius * 2) + cellRadius;
@@ -89,7 +102,15 @@ function spawncells() {
         if (!hit) {
             cells.push(new Cell(x, y));
             counter++;
+            spawnTimeout = 0;
+        } else {
+            spawnTimeout++;
+        }
+        //check if timeout is reached
+        if (spawnTimeout >= 1000) {
+            console.log("Timeout reached");
+            break;
         }
     }
-    console.log('Cells spawned');
+    console.log(cells.length + ' Cells spawned');
 }
