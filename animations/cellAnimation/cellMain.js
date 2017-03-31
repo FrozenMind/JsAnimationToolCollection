@@ -8,11 +8,11 @@ function cellAnimationInit() {
     /*
      * SETTING AREA
      */
-    cellAmount = 150;
+    cellAmount = 100;
     cellRadius = 5;
     fps = 60;
     plopCount = 5;
-    cellSpeed = 3;
+    cellSpeed = 2;
     /*
      * END SETTING AREA
      */
@@ -30,16 +30,16 @@ function cellTick() {
     for (i = cells.length - 1; i >= 0; i--) {
         //check if cells hit borders, return speed if they do
         //set cell to border, so it dont escape
-        if (cells[i].cell.x <= 0 + cells[i].radius) {
+        if (cells[i].cell.x < cells[i].radius) {
             cells[i].speedX *= -1;
-            cells[i].cell.x = 0 + cells[i].radius;
-        } else if (cells[i].cell.x >= width - cells[i].radius) {
+            cells[i].cell.x = cells[i].radius;
+        } else if (cells[i].cell.x > width - cells[i].radius) {
             cells[i].speedX *= -1;
             cells[i].cell.x = width - cells[i].radius;
-        } else if (cells[i].cell.y <= 0 + cells[i].radius) {
+        } else if (cells[i].cell.y < cells[i].radius) {
             cells[i].speedY *= -1;
-            cells[i].cell.y = 0 + cells[i].radius;
-        } else if (cells[i].cell.y >= height - cells[i].radius) {
+            cells[i].cell.y = cells[i].radius;
+        } else if (cells[i].cell.y > height - cells[i].radius) {
             cells[i].speedY *= -1;
             cells[i].cell.y = height - cells[i].radius;
         }
@@ -62,12 +62,14 @@ function cellTick() {
     for (i = cells.length - 1; i >= 0; i--) {
         //cell explodes when its to huge
         if (cells[i].radius > cellRadius * plopCount) {
-            var max = Math.floor(cells[i].radius / cellRadius);
-            for (j = 0; j < max; j++) {
-                var newX = cells[i].cell.x + Math.cos(360 * (j / max - 1)) * cellRadius * 5;
-                var newY = cells[i].cell.y + Math.sin(360 * (j / max - 1)) * cellRadius * 5;
+            var newCellCount = Math.floor(cells[i].radius / cellRadius);
+            for (j = 0; j < newCellCount; j++) {
+                var newX = cells[i].cell.x + Math.cos(360 * (j / newCellCount - 1)) * cellRadius * 5;
+                var newY = cells[i].cell.y + Math.sin(360 * (j / newCellCount - 1)) * cellRadius * 5;
+                var newSpeedX = cellSpeed * Math.cos(360 * (j / newCellCount - 1));
+                var newSpeedY = cellSpeed * Math.sin(360 * (j / newCellCount - 1));
                 cells.push(new Cell(newX, newY));
-                cells[cells.length - 1].setNewSpeed(cells[cells.length - 1].speed * Math.cos(360 * (j / max - 1)), cells[cells.length - 1].speed * Math.sin(360 * (j / max - 1)));
+                cells[cells.length - 1].setNewSpeed(newSpeedX, newSpeedY);
             }
             stage.removeChild(cells[i].cell);
             cells.splice(i, 1);
