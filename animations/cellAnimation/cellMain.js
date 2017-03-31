@@ -22,11 +22,11 @@ function cellAnimationInit() {
     height = stage.canvas.height;
 
     spawncells();
-    createjs.Ticker.addEventListener("tick", tick);
+    createjs.Ticker.addEventListener("tick", cellTick);
     createjs.Ticker.setFPS(fps);
 }
 
-function tick() {
+function cellTick() {
     for (i = cells.length - 1; i >= 0; i--) {
         //check if cells hit borders, return speed if they do
         //set cell to border, so it dont escape

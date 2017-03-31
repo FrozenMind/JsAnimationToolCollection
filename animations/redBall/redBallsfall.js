@@ -8,12 +8,12 @@ function redBallsFallInit() {
         arr.length; i++) {
         stage.addChild(arr[i]);
     }
-    createjs.Ticker.addEventListener("tick", tick);
+    createjs.Ticker.addEventListener("tick", redBallTick);
     createjs.Ticker.setFPS(30);
 }
 var up = false;
 
-function tick() {
+function redBallTick() {
     arr.push(newCircle(Math.floor(Math.random() * (stage.canvas.width - 10) + 1), Math.floor(Math.random() * 6 + 1), Math.floor(Math.random() * 30 + 5)));
     for (i = arr.length - 1; i >= 0; i--) {
         arr[i].y += arr[i].speed;

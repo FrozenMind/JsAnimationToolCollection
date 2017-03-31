@@ -30,11 +30,11 @@ function rainInit() {
     rain = new Rain(rainOptions);
     stage = new createjs.Stage("demoCanvas");
     stage.canvas.style.background = canBackground;
-    createjs.Ticker.addEventListener("tick", tick);
+    createjs.Ticker.addEventListener("tick", rainTick);
     createjs.Ticker.setFPS(fps);
 }
 
-function tick() {
+function rainTick() {
     rain.addDrops(rainRatio);
     rain.update();
     cloud.update();
