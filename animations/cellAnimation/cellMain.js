@@ -8,7 +8,7 @@ function cellAnimationInit() {
     /*
      * SETTING AREA
      */
-    cellAmount = 100;
+    cellAmount = 150;
     cellRadius = 5;
     fps = 60;
     plopCount = 5;
@@ -18,6 +18,7 @@ function cellAnimationInit() {
      */
     stage = new createjs.Stage('demoCanvas');
     stage.canvas.style.background = '#000000';
+    //stage.canvas.style.background = '#ffffff';
     width = stage.canvas.width;
     height = stage.canvas.height;
 
@@ -49,7 +50,14 @@ function cellTick() {
             var d = Math.sqrt(Math.pow(cells[i].cell.x - cells[j].cell.x, 2) + Math.pow(cells[i].cell.y - cells[j].cell.y, 2));
             if (d < cells[j].radius + cells[i].radius) {
                 cells[j].radius += cells[i].radius;
-                cells[j].cell.graphics.drawCircle(0, 0, cells[j].radius);
+                var color = {
+                    //r: midOfTwoHex(cells[j].r, cells[i].r),
+                    r: '00',
+                    //g: midOfTwoHex(cells[j].g, cells[i].g),
+                    g: '00',
+                    b: midOfTwoHex(cells[j].b, cells[i].b)
+                };
+                cells[j].cell.graphics.beginFill('#' + color.r + '' + color.g + '' + color.b).drawCircle(0, 0, cells[j].radius);
                 stage.removeChild(cells[i].cell);
                 cells.splice(i, 1);
                 spliced = true;
@@ -68,7 +76,12 @@ function cellTick() {
                 var newY = cells[i].cell.y + Math.sin(360 * (j / newCellCount - 1)) * cellRadius * 5;
                 var newSpeedX = cellSpeed * Math.cos(360 * (j / newCellCount - 1));
                 var newSpeedY = cellSpeed * Math.sin(360 * (j / newCellCount - 1));
-                cells.push(new Cell(newX, newY));
+                var color = {
+                    r: cells[i].r,
+                    g: cells[i].g,
+                    b: cells[i].b
+                };
+                cells.push(new Cell(newX, newY, color));
                 cells[cells.length - 1].setNewSpeed(newSpeedX, newSpeedY);
             }
             stage.removeChild(cells[i].cell);
@@ -93,7 +106,14 @@ function spawncells() {
             }
         }
         if (!hit) {
-            cells.push(new Cell(x, y));
+            var color = {
+                //r: randomHexValue(),
+                r: '00',
+                //g: randomHexValue(),
+                g: '00',
+                b: randomHexValue()
+            };
+            cells.push(new Cell(x, y, color));
             counter++;
             spawnTimeout = 0;
         } else {
@@ -106,4 +126,16 @@ function spawncells() {
         }
     }
     console.log(cells.length + ' Cells spawned');
+}
+
+function midOfTwoHex(h1, h2) {
+    h1 = parseInt(h1, 16);
+    h2 = parseInt(h2, 16);
+    var newH = Math.floor((h1 + h2) / 2).toString(16);
+    return newH;
+}
+
+function randomHexValue() {
+    //return Math.floor((Math.random() * 255)).toString(16);
+    return Math.floor((Math.random() * 205) + 50).toString(16);
 }

@@ -1,4 +1,4 @@
-function Cell(x, y) {
+function Cell(x, y, color) {
     this.speed = cellSpeed;
     this.speedX = Math.floor(Math.random() * this.speed * 2 - this.speed);
     this.speedY = (this.speed - Math.abs(this.speedX)) * (Math.floor(Math.random() * 2) == 0 ? -1 : 1);
@@ -7,7 +7,11 @@ function Cell(x, y) {
     this.cell.x = x;
     this.cell.y = y;
     this.radius = cellRadius;
-    this.cell.graphics.beginFill('#cc0000').drawCircle(0, 0, this.radius);
+    //colors in hex string
+    this.r = color.r;
+    this.g = color.g;
+    this.b = color.b;
+    this.cell.graphics.beginFill('#' + this.r + '' + this.g + '' + this.b).drawCircle(0, 0, this.radius);
     stage.addChild(this.cell);
 }
 
