@@ -1,19 +1,7 @@
-var cells = [];
-var cellAmount, cellRadius, plopCount, cellSpeed;
-var width, height;
+var cells = []
 
 function cellAnimationInit() {
-  /*
-   * SETTING AREA
-   */
-  cellAmount = 100;
-  cellRadius = 5;
-  plopCount = 5;
-  cellSpeed = 2;
-  /*
-   * END SETTING AREA
-   */
-  stage.canvas.style.background = '#000000';
+  stage.canvas.style.background = opt.cell.canBg || opt.global.canBg
   spawncells();
 }
 
@@ -59,13 +47,13 @@ function cellTick() {
   }
   for (i = cells.length - 1; i >= 0; i--) {
     //cell explodes when its to huge
-    if (cells[i].radius > cellRadius * plopCount) {
-      var newCellCount = Math.floor(cells[i].radius / cellRadius);
+    if (cells[i].radius > opt.cell.radius * opt.cell.plopCount) {
+      var newCellCount = Math.floor(cells[i].radius / opt.cell.radius);
       for (j = 0; j < newCellCount; j++) {
-        var newX = cells[i].cell.x + Math.cos(360 * (j / newCellCount - 1)) * cellRadius * 5;
-        var newY = cells[i].cell.y + Math.sin(360 * (j / newCellCount - 1)) * cellRadius * 5;
-        var newSpeedX = cellSpeed * Math.cos(360 * (j / newCellCount - 1));
-        var newSpeedY = cellSpeed * Math.sin(360 * (j / newCellCount - 1));
+        var newX = cells[i].cell.x + Math.cos(360 * (j / newCellCount - 1)) * opt.cell.radius * 5;
+        var newY = cells[i].cell.y + Math.sin(360 * (j / newCellCount - 1)) * opt.cell.radius * 5;
+        var newSpeedX = opt.cell.speed * Math.cos(360 * (j / newCellCount - 1));
+        var newSpeedY = opt.cell.speed * Math.sin(360 * (j / newCellCount - 1));
         var color = {
           r: cells[i].r,
           g: cells[i].g,
@@ -84,13 +72,13 @@ function cellTick() {
 function spawncells() {
   counter = 0;
   var spawnTimeout = 0;
-  while (counter < cellAmount) {
-    x = Math.random() * (width - cellRadius * 2) + cellRadius;
-    y = Math.random() * (height - cellRadius * 2) + cellRadius;
+  while (counter < opt.cell.amount) {
+    x = Math.random() * (width - opt.cell.radius * 2) + opt.cell.radius;
+    y = Math.random() * (height - opt.cell.radius * 2) + opt.cell.radius;
     hit = false;
     for (i = 0; i < cells.length; i++) {
       dist = Math.sqrt(Math.pow(cells[i].cell.x - x, 2) + Math.pow(cells[i].cell.y - y, 2))
-      if (dist < (cellRadius + cellSpeed) * 2) {
+      if (dist < (opt.cell.radius + opt.cell.speed) * 2) {
         hit = true;
       }
     }

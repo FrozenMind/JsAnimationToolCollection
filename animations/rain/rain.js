@@ -1,50 +1,29 @@
 var circle;
 var drops = [];
 var cloud, rain;
-//settings variables
-var windSpeed, rainOptions, rainRatio, canBackground;
 
 function rainInit() {
-  /*
-   * SETTINGS
-   */
-  windSpeed = 10;
-  rainRatio = 3; //amount of drops that are generated every frame
-  canBackground = "RGB(40,40,40)";
-  //to set the rain options, dont remove an attribute: if u want to use default value set it undefined
-  rainOptions = {
-    minHeight: 7,
-    maxHeight: 9,
-    minWidth: 5,
-    maxWidth: 7,
-    dropSpeed: 50,
-    blueStartColor: 100,
-    blueEndColor: 200 //max is 256
-  };
-  /*
-   * SETTINGS END
-   */
   cloud = new Cloud();
-  rain = new Rain(rainOptions);
-  stage.canvas.style.background = canBackground;
+  rain = new Rain();
+  stage.canvas.style.background = opt.rain.canBg || opt.global.canBg
 }
 
 function rainTick() {
-  rain.addDrops(rainRatio);
+  rain.addDrops(opt.rain.ratio);
   rain.update();
   cloud.update();
   rain.show();
 }
 //create an ellipse and push it to stage
-function Raindrop(opts) {
+function Raindrop() {
   this.cir = new createjs.Shape();
-  this.b = Math.floor(Math.random() * (opts.blueEndColor - opts.blueStartColor || 230) + (opts.blueStartColor || 40)); //random blue color
-  this.width = Math.floor(Math.random() * (opts.maxWidth - opts.minWidth || 8) + (opts.minWidth || 3)); //width of ellipse
-  this.height = Math.floor(Math.random() * (opts.maxHeight - opts.minHeight || 8) + (opts.minHeight || 3)); //height of ellipse
-  this.cir.x = Math.floor(Math.random() * (stage.canvas.width + windSpeed) - windSpeed);
+  this.b = Math.floor(Math.random() * (opt.rain.drop.blueEndColor - opt.rain.drop.blueStartColor || 230) + (opt.rain.drop.blueStartColor || 40)); //random blue color
+  this.width = Math.floor(Math.random() * (opt.rain.drop.maxWidth - opt.rain.drop.minWidth || 8) + (opt.rain.drop.minWidth || 3)); //width of ellipse
+  this.height = Math.floor(Math.random() * (opt.rain.drop.maxHeight - opt.rain.drop.minHeight || 8) + (opt.rain.drop.minHeight || 3)); //height of ellipse
+  this.cir.x = Math.floor(Math.random() * (stage.canvas.width + opt.rain.windSpeed) - opt.rain.windSpeed);
   this.cir.y = -this.height;
-  this.speedX = windSpeed / (this.height + this.width); //its the wind effect
-  this.speedY = (opts.dropSpeed || 100) / (this.height + this.width); //bigger raindrop should fall faster
+  this.speedX = opt.rain.windSpeed / (this.height + this.width); //its the wind effect
+  this.speedY = (opt.rain.drop.dropSpeed || 100) / (this.height + this.width); //bigger raindrop should fall faster
   this.update = function() {
     this.cir.x += this.speedX;
     this.cir.y += this.speedY;
@@ -56,11 +35,11 @@ function Raindrop(opts) {
   };
 }
 //rain controls drops, so i can create a modify the constructor to make things like color rain
-function Rain(opts) {
+function Rain() {
   this.drops = [];
   this.addDrops = function(count) {
     for (i = 1; i < count; i++) {
-      this.drops.push(new Raindrop(opts));
+      this.drops.push(new Raindrop());
     }
   };
   this.update = function() {
@@ -84,6 +63,6 @@ function Rain(opts) {
 //generate Cloud
 function Cloud() {
   this.cir = [];
-  this.speedX = windSpeed; //wind moves clouds
+  this.speedX = opt.rain.windSpeed; //wind moves clouds
   this.update = function() {};
 }

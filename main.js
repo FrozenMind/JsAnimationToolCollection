@@ -9,6 +9,7 @@ function mainInit() {
     height: $("body").height()
   });
   stage = new createjs.Stage('demoCanvas');
+  stage.background = opt.global.canBg
   width = stage.canvas.width;
   height = stage.canvas.height;
   createjs.Ticker.addEventListener("tick", mainTick)

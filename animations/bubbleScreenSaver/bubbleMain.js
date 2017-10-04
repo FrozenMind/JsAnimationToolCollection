@@ -3,14 +3,7 @@ var canBackground
 
 //initialize the project
 function bubbleInit() {
-  /*
-   * SETTINGS
-   */
-  canBackground = "RGB(255,255,255)";
-  /*
-   * SETTINGS END
-   */
-  stage.canvas.style.background = canBackground;
+  stage.canvas.style.background = opt.bubble.canBg || opt.global.canBg
 }
 //ticker, which controls the drawing
 function bubbleTick() {

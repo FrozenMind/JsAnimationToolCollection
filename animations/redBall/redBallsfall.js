@@ -2,11 +2,10 @@ var circle;
 var arr = [];
 
 function redBallsFallInit() {
-  canBackground = "#fff";
   for (i = 0; i < arr.length; i++) {
     stage.addChild(arr[i]);
   }
-  stage.canvas.style.background = canBackground;
+  stage.canvas.style.background = opt.redBall.canBg || opt.global.canBg
 }
 
 var up = false;
