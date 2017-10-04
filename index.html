@@ -1,5 +1,7 @@
 <html>
 <head>
+    <title>JsAnimationCollection</title>
+
     <link rel="stylesheet" href="lib/style.css">
     <title>Your title</title>
     <script src="lib/dat.gui.min.js"></script>
@@ -9,21 +11,25 @@
     <script src="lib/soundjs-0.6.2.min.js"></script>
     <script src="lib/tweenjs-0.6.2.min.js"></script>
 
+    <script src="main.js"></script>
+
     <script src="animations/cellAnimation/cellMain.js"></script>
     <script src="animations/cellAnimation/cell.js"></script>
     <script src="animations/rain/rain.js"></script>
     <script src="animations/redBall/redBallsfall.js"></script>
+    <script src="animations/bubbleScreenSaver/bubble.js"></script>
+    <script src="animations/bubbleScreenSaver/bubbleMain.js"></script>
 
-    <script src="main.js"></script>
 </head>
 
 <body>
-    <h2>Created By (<a href="www.games-broduction.com">games-broduction.com</a>)</h2>
+    <h2>Created By <a href="www.games-broduction.com">Games Broduction</a></h2>
     <select id="mode" name="mode" size="1" title="Select Mode" onchange="changeMode()">
+        <option value="-1" selected="selected">None</option>
         <option value="0">Cell Animation</option>
         <option value="1">Rain</option>
         <option value="2">RedBall</option>
-        <option value="3">Text Visualisation</option>
+        <option value="3">Bubble</option>
     </select>
       <canvas id="demoCanvas" width="500" height="500"></canvas>
 </body>
