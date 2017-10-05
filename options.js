@@ -1,6 +1,8 @@
+//TODO: handle default values somehow
 let opt = {
   global: {
-    canBg: "#000"
+    canBg: "#000",
+    fps: 30
   },
   bubble: {
     canBg: "#000"
@@ -15,7 +17,7 @@ let opt = {
   rain: {
     canBg: "#888",
     windSpeed: 10,
-    ratio: 3,
+    ratio: 3, //new drops per tick
     drop: {
       minHeight: 7,
       maxHeight: 9,
@@ -27,6 +29,11 @@ let opt = {
     }
   },
   redBall: {
-    canBg: "#fff"
+    canBg: "#fff",
+    down: true, //true = balls fall, false = balls go up
+    maxSpeed: 10, //max fall speed ! maxSpeed >= minSpeed !
+    minSpeed: 5, //min fall speed
+    maxSize: 15, //max ball size ! maxSize >= minSize !
+    minSize: 10 //min ball size
   }
 }

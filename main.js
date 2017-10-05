@@ -1,6 +1,9 @@
+let selectedMode
+let stage, width, height
+
 $(document).ready(function() {
   mainInit();
-});
+})
 
 function mainInit() {
   //set canvas fullscreen
@@ -13,11 +16,8 @@ function mainInit() {
   width = stage.canvas.width;
   height = stage.canvas.height;
   createjs.Ticker.addEventListener("tick", mainTick)
-  createjs.Ticker.setFPS(30);
+  createjs.Ticker.setFPS(opt.global.fps);
 }
-
-var selectedMode
-var stage
 
 function changeMode() {
   //TODO: delete all active createjs Ticker
@@ -25,6 +25,8 @@ function changeMode() {
   console.log(selectedMode);
   stage.removeAllChildren()
   switch (selectedMode) {
+    case -1: //off
+      break;
     case 0: //cellAnimation
       console.log("started Cell Animation");
       cellAnimationInit();
@@ -35,7 +37,7 @@ function changeMode() {
       break;
     case 2: //redball
       console.log("started Red Ball Animation");
-      redBallsFallInit();
+      redBallsInit();
       break;
     case 3: //bubbleTick
       bubbleInit()
@@ -45,6 +47,8 @@ function changeMode() {
 
 function mainTick() {
   switch (selectedMode) {
+    case -1: //none
+      break;
     case 0: //cellAnimation
       cellTick()
       break;

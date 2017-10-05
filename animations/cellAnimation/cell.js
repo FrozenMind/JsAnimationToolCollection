@@ -1,8 +1,8 @@
 function Cell(x, y, color) {
-  this.speed = opt.cell.speed;
-  this.speedX = Math.floor(Math.random() * this.speed * 2 - this.speed);
-  this.speedY = (this.speed - Math.abs(this.speedX)) * (Math.floor(Math.random() * 2) == 0 ? -1 : 1);
-  this.dicellion = Math.floor(Math.random() * 8 + 1);
+  this.speed = opt.cell.speed //total speed
+  this.speedX = Math.floor(Math.random() * this.speed * 2 - this.speed)
+  this.speedY = (this.speed - Math.abs(this.speedX)) * (Math.floor(Math.random() * 2) == 0 ? -1 : 1)
+  this.dicellion = Math.floor(Math.random() * 8 + 1)
   this.cell = new createjs.Shape();
   this.cell.x = x;
   this.cell.y = y;
